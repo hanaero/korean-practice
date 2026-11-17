@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#172642">
-  <meta name="description" content="A visual, gentle Korean grammar trainer. See the pieces, understand why they are there, and practice spotting them.">
+  <meta name="description" content="A visual, gentle Korean grammar trainer with colour-coded particles, a seven-day learning path, recall hints, and short practice activities.">
   <title>조각 · Korean in Pieces</title>
   <style>
     :root {
@@ -138,6 +138,59 @@
       .word-group { margin:0 5px; }
       .korean-panel { padding:25px 9px; }
     }
+
+    /* Seven-day learning path */
+    .week-lead { margin-bottom:16px; max-width:740px; }
+    .days { display:flex; gap:9px; overflow:auto; padding:3px 1px 13px; margin:0 0 15px; scrollbar-width:thin; }
+    .day-choice { text-align:left; min-width:164px; padding:12px 13px; border-radius:14px; background:#fff; border:1px solid var(--line); color:var(--ink); }
+    .day-choice.active { background:#f0f4fc; border-color:#7e98ce; box-shadow:0 0 0 1px #7e98ce inset; }
+    .day-choice.done { border-color:#8bc2ad; }
+    .day-choice small { font-size:11px; color:var(--muted); font-weight:700; }
+    .day-choice strong { font-size:13px; display:block; margin:6px 0; line-height:1.35; }
+    .day-choice .day-status { display:block; font-size:11px; color:#477666; }
+    .week-top { display:flex; align-items:flex-start; justify-content:space-between; gap:14px; }
+    .week-progress { background:#edf0f6; border-radius:12px; padding:9px 12px; font-size:12px; font-weight:750; white-space:nowrap; }
+    .week-card { max-width:790px; }
+    .task-steps { display:flex; flex-wrap:wrap; gap:6px; margin:15px 0 20px; }
+    .task-step { border:1px solid #d8deea; background:white; color:#55647b; border-radius:10px; padding:7px 10px; font-size:12px; min-width:48px; font-weight:750; }
+    .task-step.active { color:#fff; border-color:#223958; background:#223958; }
+    .task-step.done:not(.active) { color:#176958; border-color:#aad8c6; background:#edfaf4; }
+    .task-eyebrow { display:flex; justify-content:space-between; gap:12px; color:var(--muted); font-size:12px; font-weight:750; }
+    .task-title { font-size:21px; margin:6px 0 8px; line-height:1.24; }
+    .task-description { color:#5a6980; font-size:14px; }
+    .task-body { margin:19px 0; }
+    .task-info { background:#f2f5fb; border-left:4px solid #83a0d6; border-radius:11px; padding:13px 15px; margin:13px 0; font-size:14px; }
+    .task-result { background:#ecf7f1; border:1px solid #c8e6d6; padding:12px 14px; border-radius:12px; margin-top:14px; font-size:14px; }
+    .task-result.try { background:#fff7ec; border-color:#e9d5b8; }
+    .option-list { display:grid; gap:9px; margin-top:14px; }
+    .option-btn { width:100%; text-align:left; color:var(--ink); background:#fafbfe; border:1px solid #dce2ee; padding:13px 15px; border-radius:12px; font-size:14px; }
+    .option-btn:hover:not(:disabled) { background:#eff4fc; border-color:#99b1dd; }
+    .option-btn.picked-wrong { border-color:#d98c76; background:#fff1ec; }
+    .option-btn.picked-right { border-color:#72b59b; background:#e9f8f0; }
+    .tile-grid { display:flex; flex-wrap:wrap; gap:8px; margin:10px 0; }
+    .tile { padding:12px 14px; background:white; border:1px solid #b9c6dc; border-radius:12px; font-weight:750; font-size:20px; color:var(--ink); }
+    .tile.used { background:#f0f3f7; color:#718095; border-color:#e1e5ed; }
+    .build-target { border:2px dashed #becce3; background:#f7f9fd; min-height:75px; border-radius:13px; padding:12px; display:flex; align-items:center; gap:7px; flex-wrap:wrap; margin:12px 0; }
+    .build-target .tile { font-size:19px; padding:8px 10px; }
+    .build-placeholder { color:#74839c; font-size:13px; }
+    .recall-box { border:1px solid #e5e8ef; background:#f6f8fc; border-radius:16px; text-align:center; padding:23px 15px; }
+    .recall-term { font-size:clamp(35px,8vw,55px); font-weight:750; line-height:1.4; }
+    .recall-hint { background:#fff; padding:12px; border-radius:11px; margin:12px 0 0; font-size:14px; }
+    .recall-actions { display:flex; justify-content:center; flex-wrap:wrap; gap:8px; margin-top:15px; }
+    .rating-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; margin-top:14px; }
+    .rating-grid .btn { font-size:12px; padding:10px 7px; }
+    .week-notice { margin-top:12px; background:#f1f4f9; border-radius:13px; padding:13px 15px; color:#445774; font-size:13px; }
+    .task-controls { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-top:17px; }
+    .pill-tag { border:1px solid #dce1eb; padding:5px 9px; border-radius:999px; color:#596b82; font-size:12px; }
+    .memory-summary { border-top:1px solid var(--line); margin-top:16px; padding-top:13px; color:#53667e; font-size:12px; }
+    .learn-list { display:flex; flex-wrap:wrap; gap:8px; margin-top:11px; }
+    @media(max-width:740px) {
+      .days { gap:7px; }
+      .day-choice { min-width:144px; }
+      .week-top { flex-direction:column; gap:7px; }
+      .rating-grid { grid-template-columns:1fr; }
+      .rating-grid .btn { text-align:center; }
+    }
     @media (prefers-reduced-motion:reduce) { html {scroll-behavior:auto;} .progress > span {transition:none;} }
   </style>
 </head>
@@ -146,7 +199,7 @@
   <header class="hero">
     <div class="brand"><span class="brand-icon" aria-hidden="true">조</span><div><div class="brand-name">조각 · JOGAK</div><div class="brand-sub">Korean in pieces</div></div></div>
     <h1>See how Korean fits together.</h1>
-    <p>No streaks. No guessing. Just clear colours, tiny explanations, and practice at your own pace.</p>
+    <p>Colour-coded pieces, tiny explanations and memory-friendly practice. No streaks. No pressure.</p>
   </header>
   <nav class="tabs" aria-label="App sections" id="tabs"></nav>
   <main id="app" aria-live="off"></main>
@@ -215,6 +268,65 @@
       [N('사과','apple'),P('를','object','사과','The apple is the thing being eaten.')],
       [V('먹어요','eats')]
     ]},
+
+    teacherReads:{ translation:'The teacher reads a book.',groups:[
+      [N('선생님','teacher'),P('이','subject','선생님','The teacher is doing the reading. 선생님 ends in a consonant, so the subject marker is 이.')],
+      [N('책','book'),P('을','object','책','The book is what is being read.')],
+      [V('읽어요','reads')]
+    ]},
+    dogBread:{ translation:'The dog eats bread.',groups:[
+      [N('강아지','dog'),P('가','subject','강아지','The dog does the eating. 강아지 ends in a vowel, so 가 is used.')],
+      [N('빵','bread'),P('을','object','빵','Bread is being eaten. 빵 ends in a consonant, so 을 is used.')],
+      [V('먹어요','eats')]
+    ]},
+    chickenWater:{ translation:'The chicken drinks water.',groups:[
+      [N('닭','chicken'),P('이','subject','닭','The chicken does the drinking. The final consonant means 이 is used.')],
+      [N('물','water'),P('을','object','물','Water is what the chicken drinks.')],
+      [V('마셔요','drinks')]
+    ]},
+    catCute:{ translation:'The cat is cute.',groups:[
+      [N('고양이','cat'),P('가','subject','고양이','Here the cat is the subject because it is what we are describing. A subject is not always a “doer”.')],
+      [V('귀여워요','is cute','This describes the cat. Not every sentence has an action like eating or drinking.')]
+    ]},
+    waterCold:{ translation:'The water is cold.',groups:[
+      [N('물','water'),P('이','subject','물','Water is the subject: the thing being described, not someone doing an action.')],
+      [V('차가워요','is cold','This describes a state. It helps show why subject is not always the same as “doer”.')]
+    ]},
+    dogPark:{ translation:'The dog plays in the park.',groups:[
+      [N('강아지','dog'),P('가','subject','강아지','The dog is the one playing.')],
+      [N('공원','park'),P('에서','place','공원','에서 marks where the playing happens: in the park.')],
+      [V('놀아요','plays')]
+    ]},
+    friendSchool:{ translation:'As for the friend, they go to school.',groups:[
+      [N('친구','friend'),P('는','topic','친구','This makes the friend the topic of our sentence.')],
+      [N('학교','school'),P('에','place','학교','에 marks school as the destination.')],
+      [V('가요','goes')]
+    ]},
+    meBook:{ translation:'As for me, I read a book at home.',groups:[
+      [N('저','I / me (polite)'),P('는','topic','저','The sentence is about me.')],
+      [N('집','home'),P('에서','place','집','The reading happens at home.')],
+      [N('책','book'),P('을','object','책','The book is the thing being read.')],
+      [V('읽어요','read')]
+    ]},
+    appleTopic:{ translation:'As for the apple, the friend eats it.',groups:[
+      [N('사과','apple'),P('는','topic','사과','The apple is the thing we are talking about. It is still what gets eaten.')],
+      [N('친구','friend'),P('가','subject','친구','The friend is the subject: the one who eats.')],
+      [V('먹어요','eats')]
+    ]},
+    catSleeps:{ translation:'As for the cat, it sleeps at home.',groups:[
+      [N('고양이','cat'),P('는','topic','고양이','The cat is the topic of this sentence.')],
+      [N('집','home'),P('에서','place','집','The sleeping happens at home.')],
+      [V('자요','sleeps')]
+    ]},
+    schoolBig:{ translation:'The school is big.',groups:[
+      [N('학교','school'),P('가','subject','학교','The school is the subject: it is what we are describing.')],
+      [V('커요','is big','This describes the school. There is no action being performed.')]
+    ]},
+    catMilk2:{ translation:'The cat drinks milk.',groups:[
+      [N('고양이','cat'),P('가','subject','고양이','The cat is drinking.')],
+      [N('우유','milk'),P('를','object','우유','Milk is what is being drunk. 우유 ends in a vowel, so 를 is used.')],
+      [V('마셔요','drinks')]
+    ]},
     dogTopic:{ translation:'As for the dog, it sleeps at home.',groups:[
       [N('강아지','dog'),P('는','topic','강아지','We are making the dog the thing we are talking about.')],
       [N('집','home'),P('에서','place','집','Home is where the sleeping happens.')],
@@ -223,8 +335,12 @@
   };
   const lessons=[
     {id:'roles',title:'Who does what?',sub:'Start with the doer and the thing an action is aimed at.',why:'Forget grammar names for a second: who does something, and what do they do it to? Korean uses a small piece after a word to signal each job.',sentences:['catWater','friendBook','dogBall']},
-    {id:'topic',title:'What are we talking about?',sub:'Learn why a topic and a doer are not always the same.',why:'A topic sets up the conversation: “As for the cat ...”. The subject tells us who or what the sentence is describing. Sometimes they are the same, but not always.',sentences:['catMilk','meCoffee','waterTopic']},
+    {id:'topic',title:'What are we talking about?',sub:'Learn why a topic and a doer are not always the same.',why:'A topic sets up the conversation: “As for the cat ...”. The subject tells us who or what is doing something or being described. Sometimes they are the same, but not always.',sentences:['catMilk','meCoffee','waterTopic']},
     {id:'places',title:'Where does it happen?',sub:'Understand 에 and 에서 through everyday actions.',why:'에 can mark a destination, as in going to school. 에서 marks the place where an action happens, as in reading at home.',sentences:['school','catHome','friendAtHome']},
+
+    {id:'everyday',title:'Cats, dogs & everyday life',sub:'See familiar particles with pets, people and food.',why:'Changing the noun does not change the particle’s job. 고양이, 닭 and 선생님 look different, but the same small grammar rules apply.',sentences:['teacherReads','dogBread','chickenWater','catCute']},
+    {id:'endings',title:'Why 이, not 가?',sub:'Choose the version that fits the word before it.',why:'After a final consonant use 이, 을 or 은. After a vowel use 가, 를 or 는. The meaning of the particle stays the same.',sentences:['waterCold','catMilk2','dogPark','friendSchool']},
+    {id:'stories',title:'Mini stories',sub:'Read a little more naturally in several connected situations.',why:'A subject is not always a doer: in “The school is big”, the school is the subject because it is the thing being described.',sentences:['meBook','appleTopic','catSleeps','schoolBig']},
     {id:'mixed',title:'Put the pieces together',sub:'Recognise the same little pieces in new sentences.',why:'The same patterns appear again and again. You are not learning a brand-new rule every time the noun changes.',sentences:['eatRice','friendApple','dogTopic']}
   ];
   const questions={
@@ -249,6 +365,28 @@
       {sid:'catHome',prompt:'Tap the word meaning “home”.',answer:'집',why:'집 means home. 에서 is attached to show that an action happens there.'},
       {sid:'friendAtHome',prompt:'Tap the piece marking the book as the object.',answer:'을',why:'을 attaches to 책 because the book is what gets read.'}
     ],
+
+    everyday:[
+      {sid:'teacherReads',prompt:'Tap the subject marker attached to “teacher”.',answer:'이',why:'선생님 ends in a consonant, so the subject marker is 이.'},
+      {sid:'dogBread',prompt:'Tap the word meaning “bread”.',answer:'빵',why:'빵 is bread. 을 is added because the bread gets eaten.'},
+      {sid:'chickenWater',prompt:'Tap the word meaning “chicken”.',answer:'닭',why:'닭 means chicken. 이 tells us that chicken is the subject.'},
+      {sid:'catCute',prompt:'Tap the subject marker even though there is no action.',answer:'가',why:'The cat is what is being described as cute. A subject is not always a doer.'},
+      {sid:'catMilk2',prompt:'Tap the object marker attached to “milk”.',answer:'를',why:'우유 ends in a vowel, so the object marker is 를.'}
+    ],
+    endings:[
+      {sid:'waterCold',prompt:'Tap the subject marker after “water”.',answer:'이',why:'물 ends with a consonant, so 이 is used.'},
+      {sid:'catMilk2',prompt:'Tap the object marker after “milk”.',answer:'를',why:'우유 ends in a vowel, so 를 is used.'},
+      {sid:'dogPark',prompt:'Tap the part meaning “park”.',answer:'공원',why:'공원 is park. 에서 shows it is where the action happens.'},
+      {sid:'friendSchool',prompt:'Tap the particle showing the destination.',answer:'에',why:'학교에 tells us school is where the friend is going.'},
+      {sid:'dogPark',prompt:'Tap the particle marking where the dog plays.',answer:'에서',why:'에서 shows where an action takes place.'}
+    ],
+    stories:[
+      {sid:'meBook',prompt:'Tap the particle showing where the reading happens.',answer:'에서',why:'집에서 means the action happens at home.'},
+      {sid:'appleTopic',prompt:'Tap the marker making the apple the topic.',answer:'는',why:'사과는 makes the apple what the sentence is about.'},
+      {sid:'appleTopic',prompt:'Tap the marker identifying who eats.',answer:'가',why:'친구가 identifies the friend as the subject.'},
+      {sid:'catSleeps',prompt:'Tap the word for “home”.',answer:'집',why:'집 is home. 에서 marks the location of sleeping.'},
+      {sid:'schoolBig',prompt:'Tap the subject marker, even though nobody is doing anything.',answer:'가',why:'학교 is what is being described as big.'}
+    ],
     mixed:[
       {sid:'eatRice',prompt:'Tap the word meaning “rice / meal”.',answer:'밥',why:'밥 means rice or a meal. 을 is the separate object marker.'},
       {sid:'eatRice',prompt:'Tap the piece meaning “as for me ...”.',answer:'는',why:'는 marks 저 (I / me) as the topic.'},
@@ -257,18 +395,73 @@
       {sid:'dogTopic',prompt:'Tap the piece introducing the dog as the topic.',answer:'는',why:'는 marks 강아지 as the topic — what we are talking about.'}
     ]
   };
+
+  const weekly=[
+    {title:'See the pieces',focus:'A Korean word can contain a noun and a tiny grammar marker. Start by separating them.',tasks:[
+      {type:'explore',sid:'catWater',title:'Pull a sentence apart',prompt:'Tap 물, then tap 을. Notice that they do different jobs.',why:'물 means water. 을 tells us water is the thing being drunk.'},
+      {type:'spot',sid:'catWater',title:'Find the word',prompt:'Tap the piece that means “water”.',answer:'물',why:'물 is the noun, even when 을 is attached.'},
+      {type:'choice',title:'What does 을 tell you?',prompt:'When you see 물을, what is 을 doing?',options:['It means “water”','It marks water as the thing being drunk','It means “the cat”'],answer:1,why:'물 = water. 을 marks it as the object, the thing the action affects.',hint:'The meaning of 물 does not change. Think about what the cat drinks.'},
+      {type:'spot',sid:'friendBook',title:'Same pattern, different noun',prompt:'Find the marker on the book — the thing being read.',answer:'을',why:'책 means book; 을 shows that the book is being read.'},
+      {type:'recall',title:'Bring it back',term:'물',prompt:'What does this Korean word mean?',hints:['It is something you drink.','The English word starts with W.'],answer:'Water',why:'You have seen 물, 물을, 물은 and 물이. The noun stays 물.'}
+    ]},
+    {title:'Who or what?',focus:'Learn the subject without relying only on the word “doer”.',tasks:[
+      {type:'explore',sid:'waterCold',title:'A subject is not always a doer',prompt:'Tap 물 and then 이. What is the sentence describing?',why:'Water is the subject because the sentence describes it as cold. Nobody is performing an action.'},
+      {type:'spot',sid:'teacherReads',title:'Who is reading?',prompt:'Tap the marker attached to the teacher.',answer:'이',why:'선생님 ends in a consonant, so the subject marker is 이.'},
+      {type:'choice',title:'Choose the ending',prompt:'Which is correct for “teacher” as the subject?',options:['선생님가','선생님이','선생님을'],answer:1,why:'선생님 ends in a consonant sound, so the subject marker is 이.',hint:'Look at the last sound in 선생님: ㅁ is a consonant.'},
+      {type:'spot',sid:'catCute',title:'What is cute?',prompt:'Tap the subject marker attached to the cat.',answer:'가',why:'In “The cat is cute”, the cat is what is being described.'},
+      {type:'recall',title:'Remember yesterday',term:'물',prompt:'What does this mean?',hints:['It is often in a glass.','The English word starts with W.'],answer:'Water',why:'Recognising 물 again tomorrow is more useful than cramming it once.'}
+    ]},
+    {title:'The thing affected',focus:'Object markers tell us what is eaten, drunk, seen or read.',tasks:[
+      {type:'explore',sid:'friendApple',title:'Follow the action',prompt:'Tap 사과 and 를. Who eats, and what gets eaten?',why:'사과 is apple; 를 marks it as the thing being eaten.'},
+      {type:'spot',sid:'dogBread',title:'Find the object marker',prompt:'Tap the marker attached to bread.',answer:'을',why:'빵 ends in a consonant, so we use 을.'},
+      {type:'choice',title:'Vowel or consonant?',prompt:'Which object form attaches to “apple” (사과)?',options:['사과을','사과를','사과가'],answer:1,why:'사과 ends with a vowel sound, so the object marker is 를.',hint:'The final vowel in 사과 is ㅏ.'},
+      {type:'choice',title:'Try another noun',prompt:'Which says “book” as the object?',options:['책를','책을','책는'],answer:1,why:'책 ends in a consonant (ㄱ). Use 을.',hint:'Check the final sound of 책: ㄱ is a consonant.'},
+      {type:'recall',title:'Quick recall',term:'책',prompt:'What is this?',hints:['Something you can read.','English starts with B.'],answer:'Book',why:'책 + 을 = 책을; the base word does not change.'}
+    ]},
+    {title:'The topic is different',focus:'The topic is what we are talking about; the subject is what is doing or being described.',tasks:[
+      {type:'explore',sid:'waterTopic',title:'Water is the topic, cat is the subject',prompt:'Tap 은, then 가. Notice the different jobs.',why:'물은 means “as for the water”. 고양이가 tells us the cat drinks it.'},
+      {type:'choice',title:'Who is drinking?',prompt:'In 물은 고양이가 마셔요, who actually drinks?',options:['The water','The cat','Nobody'],answer:1,why:'물은 is the topic, but 고양이가 is the cat doing the drinking.',hint:'가 is attached to 고양이 (cat).'},
+      {type:'spot',sid:'catMilk',title:'A new topic',prompt:'Tap the topic marker attached to the cat.',answer:'는',why:'고양이는 introduces the cat as the topic: “As for the cat ...”'},
+      {type:'choice',title:'The consonant version',prompt:'Which is the topic form of “water”?',options:['물는','물은','물을'],answer:1,why:'물 ends in a consonant, so the topic particle is 은.',hint:'The noun ends in ㄹ, a consonant.'},
+      {type:'recall',title:'Bring back an earlier word',term:'책',prompt:'What does it mean?',hints:['It is made of pages.','English starts with B.'],answer:'Book',why:'A few days between attempts helps you practise retrieval.'}
+    ]},
+    {title:'Where does it happen?',focus:'Learn one useful contrast: destination 에 versus location of an action 에서.',tasks:[
+      {type:'explore',sid:'school',title:'Going somewhere',prompt:'Tap 학교, then 에. Why does the school have 에?',why:'학교에 means “to school” here: it tells us the destination of going.'},
+      {type:'spot',sid:'catHome',title:'Doing something somewhere',prompt:'Find the marker on home that tells us where the cat sleeps.',answer:'에서',why:'집에서 means “at home” for an action taking place.'},
+      {type:'choice',title:'Destination or action?',prompt:'Which means “I go to school” in this context?',options:['저는 학교에서 가요','저는 학교에 가요','저는 학교를 가요'],answer:1,why:'에 marks the destination of going. 에서 usually marks where an action happens.',hint:'Think: going TO somewhere.'},
+      {type:'choice',title:'Choose the location marker',prompt:'Which form fits “I read a book at home”?',options:['집에 책을 읽어요','집에서 책을 읽어요','집을 책을 읽어요'],answer:1,why:'Reading takes place at home, so 에서 is used.',hint:'Reading is an action that happens AT home.'},
+      {type:'recall',title:'Recall an older word',term:'물',prompt:'What does this mean?',hints:['A basic drink.','English starts with W.'],answer:'Water',why:'A familiar noun can appear with many different particles.'}
+    ]},
+    {title:'Build the sentence',focus:'Try producing whole Korean sentences instead of only recognising them.',tasks:[
+      {type:'explore',sid:'meBook',title:'Four useful chunks',prompt:'Tap the word and particle pieces before building your own sentences.',why:'저는 (topic), 집에서 (where), 책을 (object), 읽어요 (action).'},
+      {type:'build',title:'Build: the cat drinks water',prompt:'Tap the chunks in a natural Korean order.',tiles:['마셔요','고양이가','물을'],expected:['고양이가','물을','마셔요'],translation:'The cat drinks water.',why:'Here we put cat + water + drinks. The verb normally comes at the end.'},
+      {type:'build',title:'Build: I drink coffee',prompt:'Put the chunks in order.',tiles:['커피를','마셔요','저는'],expected:['저는','커피를','마셔요'],translation:'As for me, I drink coffee.',why:'저는 is the topic, 커피를 is what gets drunk, 마셔요 is the action.'},
+      {type:'choice',title:'Spot the right form',prompt:'Which says “milk” as the object?',options:['우유을','우유를','우유는'],answer:1,why:'우유 ends with a vowel, so its object particle is 를.',hint:'Milk is 우유; it ends with the vowel ㅠ.'},
+      {type:'recall',title:'Recall a place',term:'집',prompt:'What does this word mean?',hints:['It is where someone lives.','English begins with H.'],answer:'Home / house',why:'In 집에서, the noun 집 means home and 에서 marks the location of an action.'}
+    ]},
+    {title:'Mix it up & remember',focus:'Bring back older patterns in a new context, without pressure or a timer.',tasks:[
+      {type:'spot',sid:'appleTopic',title:'Find the topic',prompt:'Find the particle showing the apple is what we are discussing.',answer:'는',why:'사과는 puts the apple forward as the topic.'},
+      {type:'choice',title:'Subject is not always a doer',prompt:'In 물이 차가워요 (The water is cold), why is water the subject?',options:['Because the water is the thing being described','Because the water performs an action','Because 이 means cold'],answer:0,why:'The subject can be the thing being described. There is no action here.',hint:'Ask what the sentence is describing as cold.'},
+      {type:'build',title:'Build a longer sentence',prompt:'Tap the chunks to rebuild the sentence.',tiles:['책을','읽어요','친구가','집에서'],expected:['친구가','집에서','책을','읽어요'],translation:'The friend reads a book at home.',why:'Who: 친구가. Where: 집에서. What: 책을. Action: 읽어요.'},
+      {type:'choice',title:'Explain a different topic',prompt:'What does 물은 고양이가 마셔요 tell us?',options:['The water drinks the cat','As for the water, the cat drinks it','The cat is cold'],answer:1,why:'물은 sets the topic. 고양이가 identifies the subject that drinks.',hint:'물 = water, 고양이 = cat, 마셔요 = drinks.'},
+      {type:'recall',title:'End-of-week memory check',term:'학교',prompt:'What is this word?',hints:['A place where people learn.','English begins with S.'],answer:'School',why:'Nice work. Revisit this day later to see how much comes back without hints.'}
+    ]}
+  ];
   const saved=(()=>{try {return JSON.parse(localStorage.getItem('jogak-v1'))||{}}catch(e){return {}}})();
   const state={
-    tab:['explore','practice','guide'].includes(saved.tab)?saved.tab:'explore',
+    tab:['week','explore','practice','guide'].includes(saved.tab)?saved.tab:'week',
     lesson:lessons.some(l=>l.id===saved.lesson)?saved.lesson:'roles',
     sentenceIndex:saved.sentenceIndex||{},quizIndex:saved.quizIndex||{},
     support:['guided','colour','natural'].includes(saved.support)?saved.support:'guided',
     showTranslation:saved.showTranslation!==false,
     completed:new Set(Array.isArray(saved.completed)?saved.completed:[]),
-    selected:null, feedback:null, showQuizHints:false
+    selected:null, feedback:null, showQuizHints:false,
+    day:Number.isInteger(saved.day)&&saved.day>=0&&saved.day<7?saved.day:0,
+    taskIndex:saved.taskIndex||{},weekDone:new Set(Array.isArray(saved.weekDone)?saved.weekDone:[]),
+    weekReviews:saved.weekReviews||{},weekSelected:0,weekHint:0,weekBuild:[],weekFeedback:null
   };
   const $app=document.getElementById('app'), $tabs=document.getElementById('tabs');
-  function persist(){try{localStorage.setItem('jogak-v1',JSON.stringify({tab:state.tab,lesson:state.lesson,sentenceIndex:state.sentenceIndex,quizIndex:state.quizIndex,support:state.support,showTranslation:state.showTranslation,completed:[...state.completed]}));}catch(e){}}
+  function persist(){try{localStorage.setItem('jogak-v1',JSON.stringify({tab:state.tab,lesson:state.lesson,sentenceIndex:state.sentenceIndex,quizIndex:state.quizIndex,support:state.support,showTranslation:state.showTranslation,completed:[...state.completed],day:state.day,taskIndex:state.taskIndex,weekDone:[...state.weekDone],weekReviews:state.weekReviews}));}catch(e){}}
   function esc(v){return String(v).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
   const flat=sentence=>sentence.groups.flat();
   const currentLesson=()=>lessons.find(l=>l.id===state.lesson);
@@ -359,15 +552,116 @@
   <tr><td>Topic</td><td lang="ko">고양이<b style="color:var(--topic)">는</b></td><td lang="ko">물<b style="color:var(--topic)">은</b></td></tr>
   </tbody></table></div>
   <p class="muted" style="font-size:13px">One important twist: a topic and a subject can refer to the same person or thing, but they describe different jobs. A topic can even be something other than the subject. We'll practise that gently in lesson 2.</p></section>
-  <div class="card reference-foot" style="margin-top:15px"><h3>Your learning pace is yours</h3><p class="muted" style="font-size:13px">The app saves which practice questions you've understood in this browser. It has no streaks, no timer, and no account.</p><button class="btn secondary small" data-action="reset">Reset practice progress</button></div>`;}
+  <div class="card reference-foot" style="margin-top:15px"><h3>One extra idea to keep in mind</h3><p class="muted" style="font-size:13px">“Subject = doer” is a useful starting point for action sentences, but not the whole rule. In <span lang="ko">물이 차가워요</span> (the water is cold), water is the subject because it is what the sentence describes. You can explore this in Day 2.</p></div><div class="card reference-foot" style="margin-top:15px"><h3>Your learning pace is yours</h3><p class="muted" style="font-size:13px">The app saves your practice questions, weekly activities and most recent memory ratings in this browser. It has no streaks, no timer, and no account.</p><button class="btn secondary small" data-action="reset">Reset practice progress</button></div>`;}
+
+  const weekKey=(d,t)=>d+':'+t;
+  function weekTask(){const d=weekly[state.day],i=Math.max(0,Math.min(d.tasks.length-1,state.taskIndex[state.day]||0));return {d,i,task:d.tasks[i]};}
+  function clearWeekTransient(){state.weekSelected=0;state.weekHint=0;state.weekBuild=[];state.weekFeedback=null;}
+  function weekStatus(d){return weekly[d].tasks.filter((_,i)=>state.weekDone.has(weekKey(d,i))).length;}
+  function renderWeek(){
+    const {d,i,task}=weekTask();
+    const allCount=weekly.reduce((sum,x,idx)=>sum+weekStatus(idx),0);
+    const total=weekly.reduce((sum,x)=>sum+x.tasks.length,0);
+    const done=state.weekDone.has(weekKey(state.day,i));
+    return `<div class="week-lead"><div class="eyebrow">A gentle one-week course</div><h2>Seven days, your pace.</h2><p class="muted">About 5–10 minutes a day. Explore, spot, choose, build and recall. Hints are welcome; no streaks or deadlines. Do the days whenever you like.</p></div>
+    <div class="days" aria-label="Choose a day">${weekly.map((x,j)=>`<button class="day-choice ${j===state.day?'active':''} ${weekStatus(j)===x.tasks.length?'done':''}" data-action="week-day" data-day="${j}" aria-pressed="${j===state.day}"><small>DAY ${j+1}</small><strong>${esc(x.title)}</strong><span class="day-status">${weekStatus(j)} / ${x.tasks.length} activities ${weekStatus(j)===x.tasks.length?'✓':''}</span></button>`).join('')}</div>
+    <section class="card week-card"><div class="week-top"><div><div class="eyebrow">Day ${state.day+1} · ${esc(d.title)}</div><h2 style="font-size:23px;margin:8px 0 5px">${esc(d.focus)}</h2></div><div class="week-progress" aria-label="Course progress">${allCount} / ${total} activities</div></div>
+    <div class="progress" role="progressbar" aria-label="Weekly activities complete" aria-valuenow="${allCount}" aria-valuemin="0" aria-valuemax="${total}"><span style="width:${Math.round(allCount/total*100)}%"></span></div>
+    <div class="task-steps" aria-label="Select activity">${d.tasks.map((x,j)=>`<button class="task-step ${j===i?'active':''} ${state.weekDone.has(weekKey(state.day,j))?'done':''}" data-action="week-step" data-step="${j}" aria-label="Activity ${j+1}: ${esc(x.title)}${state.weekDone.has(weekKey(state.day,j))?', completed':''}" aria-pressed="${i===j}">${j+1}${state.weekDone.has(weekKey(state.day,j))?' ✓':''}</button>`).join('')}</div>
+    <div class="task-eyebrow"><span>${esc(({explore:'UNDERSTAND',spot:'FIND THE PIECE',choice:'CHOOSE & EXPLAIN',build:'PUT IT TOGETHER',recall:'REMEMBER WITH HINTS'})[task.type])}</span><span>${i+1} of ${d.tasks.length}</span></div>
+    <h3 class="task-title">${esc(task.title)}</h3><p class="task-description">${esc(task.prompt)}</p>
+    <div class="task-body">${renderWeekTask(task,done)}</div>
+    <div class="task-controls"><button class="btn secondary" data-action="week-prev" ${i===0?'disabled':''}>← Previous</button><div style="display:flex;gap:8px;flex-wrap:wrap">${task.type==='explore'?`<button class="btn" data-action="week-mark">${done?'Review complete ✓':'I understand this ✓'}</button>`:''}<button class="btn ${done?'':'secondary'}" data-action="week-next">${i===d.tasks.length-1?state.day===6?'Back to day 1 ↺':'Next day →':'Next activity →'}</button></div></div>
+    ${done?'<div class="week-notice">✓ You have completed this activity before. You can repeat it any time to see what you remember.</div>':''}
+    <div class="memory-summary">${weekly.filter((x,j)=>weekStatus(j)===x.tasks.length).length} of 7 days complete · Progress and recall ratings are saved in this browser. You can revisit old days whenever you want.</div>
+    </section>`;
+  }
+  function weekPieceInfo(task){
+    let tok=flat(sentences[task.sid]);let ix=Math.min(state.weekSelected,tok.length-1),t=tok[ix];
+    return `<div class="task-info"><strong>${esc(t.text)}</strong> — ${esc(t.gloss)}<br>${esc(t.why)}${['subject','object','topic','place'].includes(t.kind)?`<br><span class="muted">${esc(rule(t))}</span>`:''}</div>`;
+  }
+  function renderWeekTask(task,done){
+    if(task.type==='explore'){
+      const s=sentences[task.sid];
+      return `<div class="support-row" role="group" aria-label="Sentence assistance">${[['guided','1 · Colour & label'],['colour','2 · Colour only'],['natural','3 · No hints']].map(([k,label])=>`<button class="support-btn ${state.support===k?'active':''}" data-action="support" data-value="${k}" aria-pressed="${state.support===k}">${label}</button>`).join('')}</div><div class="korean-panel">${makeSentence(s,state.support,{selected:state.weekSelected})}</div><p class="muted" style="text-align:center">${esc(s.translation)}</p>${weekPieceInfo(task)}<div class="task-info" style="background:#f8f8f5;border-color:#d4b66b"><strong>Why it works:</strong> ${esc(task.why)}</div>`;
+    }
+    if(task.type==='spot'){
+      const s=sentences[task.sid],f=state.weekFeedback;
+      return `<div class="korean-panel">${makeSentence(s,'practice',{feedback:f,hinted:state.weekHint>0})}</div><div class="recall-actions"><button class="btn secondary small" data-action="week-hint">${state.weekHint?'Hide particle colours':'Show particle colours'}</button><span class="pill-tag">Tap one of the Korean pieces</span></div>${f?`<div class="task-result ${f.correct?'':'try'}" role="status"><strong>${f.correct?'Yes, you found it!':'Not quite — try another piece.'}</strong><div>${esc(f.correct?task.why:f.text)}</div></div>`:''}`;
+    }
+    if(task.type==='choice'){
+      const f=state.weekFeedback;
+      return `<div class="option-list" role="group" aria-label="Choose an answer">${task.options.map((o,j)=>`<button class="option-btn ${f&&f.chosen===j?f.correct?'picked-right':'picked-wrong':''}" data-action="week-choice" data-choice="${j}" ${f&&f.correct?'disabled':''}>${esc(o)}</button>`).join('')}</div><div class="recall-actions"><button class="btn secondary small" data-action="week-hint">${state.weekHint?'Hide hint':'Give me a hint'}</button></div>${state.weekHint?`<div class="task-info">${esc(task.hint)}</div>`:''}${f?`<div class="task-result ${f.correct?'':'try'}" role="status">${f.correct?`<strong>Yes! Here's why:</strong><div>${esc(task.why)}</div>`:`<strong>Not quite.</strong> ${esc(task.hint)}`}</div>`:''}`;
+    }
+    if(task.type==='build'){
+      const f=state.weekFeedback;
+      const picked=state.weekBuild;
+      return `<div class="eyebrow">Your sentence</div><div class="build-target" aria-label="Selected chunks">${picked.length?picked.map((id,j)=>`<button class="tile" data-action="week-undo" data-index="${j}" ${f&&f.correct?'disabled':''} title="Remove this chunk">${esc(task.tiles[id])}</button>`).join(''):'<span class="build-placeholder">Tap the chunks below to build the sentence...</span>'}</div><div class="eyebrow">Available chunks</div><div class="tile-grid" lang="ko">${task.tiles.map((t,j)=>`<button class="tile ${picked.includes(j)?'used':''}" data-action="week-build" data-index="${j}" ${picked.includes(j)||f&&f.correct?'disabled':''}>${esc(t)}</button>`).join('')}</div><div class="recall-actions"><button class="btn secondary small" data-action="week-reset-build">Start again</button><span class="pill-tag">${esc(task.translation)}</span></div>${f?`<div class="task-result ${f.correct?'':'try'}" role="status">${f.correct?`<strong>You built it!</strong><div>${esc(task.why)}</div>`:`<strong>Not quite.</strong> Try putting the action at the end, then use “Start again” to rebuild it.`}</div>`:''}`;
+    }
+    if(task.type==='recall'){
+      const rating=state.weekReviews[weekKey(state.day,(state.taskIndex[state.day]||0))];
+      return `<div class="recall-box"><div class="eyebrow">What comes back without looking?</div><div class="recall-term" lang="ko">${esc(task.term)}</div>${state.weekHint===0?'<p class="muted" style="font-size:13px;margin:8px 0 0">Try to recall its meaning for a moment. It is okay if nothing comes yet.</p>':''}${state.weekHint===1?`<div class="recall-hint">Small clue: ${esc(task.hints[0])}</div>`:''}${state.weekHint===2?`<div class="recall-hint">Another clue: ${esc(task.hints[1])}</div>`:''}${state.weekHint>=3?`<div class="recall-hint"><strong>Answer: ${esc(task.answer)}</strong><div class="muted" style="margin-top:6px">${esc(task.why)}</div></div>`:''}</div>
+      <div class="recall-actions">${state.weekHint<2?`<button class="btn secondary" data-action="week-hint">${state.weekHint===0?'A tiny hint, please':'Another hint'}</button>`:''}${state.weekHint<3?'<button class="btn secondary" data-action="week-reveal">Show answer</button>':''}</div>
+      ${state.weekHint===3?`<p class="muted" style="margin-top:16px;font-size:13px">How did the answer come back? Choose the closest one — there are no penalties.</p><div class="rating-grid"><button class="btn secondary" data-action="week-rate" data-rating="easy">I knew it</button><button class="btn secondary" data-action="week-rate" data-rating="hint">A hint helped</button><button class="btn secondary" data-action="week-rate" data-rating="again">Didn't remember</button></div>`:''}
+      ${rating?`<div class="week-notice">Last time: ${esc(({easy:'I knew it',hint:'A hint helped',again:'Didn’t remember'})[rating.rating])}. You can try again — the app keeps your latest rating.</div>`:''}`;
+    }
+    return '';
+  }
   function render(){
-    $tabs.innerHTML=[['explore','◈ Explore'],['practice','✓ Practise'],['guide','? The why']].map(([k,t])=>`<button class="tab ${state.tab===k?'active':''}" data-action="nav" data-tab="${k}" aria-current="${state.tab===k?'page':'false'}">${t}</button>`).join('');
-    $app.innerHTML=state.tab==='explore'?renderExplore():state.tab==='practice'?renderPractice():renderGuide();
+    $tabs.innerHTML=[['week','▦ My week'],['explore','◈ Explore'],['practice','✓ Practise'],['guide','? The why']].map(([k,t])=>`<button class="tab ${state.tab===k?'active':''}" data-action="nav" data-tab="${k}" aria-current="${state.tab===k?'page':'false'}">${t}</button>`).join('');
+    $app.innerHTML=state.tab==='week'?renderWeek():state.tab==='explore'?renderExplore():state.tab==='practice'?renderPractice():renderGuide();
     persist();
   }
   document.addEventListener('click',ev=>{
     const btn=ev.target.closest('button[data-action]');if(!btn)return;
     const act=btn.dataset.action;
+
+    if(act==='week-day'){
+      state.day=Math.max(0,Math.min(6,Number(btn.dataset.day)));
+      if(!Number.isInteger(state.taskIndex[state.day]))state.taskIndex[state.day]=0;
+      clearWeekTransient();render();return;
+    }
+    if(act==='week-step'||act==='week-prev'||act==='week-next'){
+      const {d,i}=weekTask();
+      if(act==='week-step')state.taskIndex[state.day]=Number(btn.dataset.step);
+      else if(act==='week-prev')state.taskIndex[state.day]=Math.max(0,i-1);
+      else if(i===d.tasks.length-1){state.day=(state.day+1)%weekly.length;state.taskIndex[state.day]=0;}
+      else state.taskIndex[state.day]=i+1;
+      clearWeekTransient();render();return;
+    }
+    if(act==='week-mark'){
+      const {i}=weekTask();state.weekDone.add(weekKey(state.day,i));render();return;
+    }
+    if(act==='week-hint'){
+      const {task}=weekTask();
+      if(task.type==='recall')state.weekHint=Math.min(2,state.weekHint+1);
+      else state.weekHint=state.weekHint?0:1;
+      render();return;
+    }
+    if(act==='week-reveal'){state.weekHint=3;render();return;}
+    if(act==='week-rate'){
+      const {i,task}=weekTask();if(task.type!=='recall')return;
+      state.weekReviews[weekKey(state.day,i)]={rating:btn.dataset.rating,at:new Date().toISOString()};
+      state.weekDone.add(weekKey(state.day,i));render();return;
+    }
+    if(act==='week-choice'){
+      const {i,task}=weekTask();if(task.type!=='choice'||state.weekFeedback?.correct)return;
+      const chosen=Number(btn.dataset.choice),correct=chosen===task.answer;
+      state.weekFeedback={chosen,correct};
+      if(correct)state.weekDone.add(weekKey(state.day,i));render();return;
+    }
+    if(act==='week-build'||act==='week-undo'||act==='week-reset-build'){
+      const {i,task}=weekTask();if(task.type!=='build')return;
+      if(act==='week-reset-build'){state.weekBuild=[];state.weekFeedback=null;}
+      else if(act==='week-undo'){state.weekBuild.splice(Number(btn.dataset.index),1);state.weekFeedback=null;}
+      else if(!state.weekBuild.includes(Number(btn.dataset.index))&&!state.weekFeedback?.correct){state.weekBuild.push(Number(btn.dataset.index));}
+      if(state.weekBuild.length===task.tiles.length){
+        const got=state.weekBuild.map(id=>task.tiles[id]);
+        const correct=got.every((x,j)=>x===task.expected[j]);
+        state.weekFeedback={correct};if(correct)state.weekDone.add(weekKey(state.day,i));
+      }
+      render();return;
+    }
     if(act==='nav'){state.tab=btn.dataset.tab;state.feedback=null;state.showQuizHints=false;}
     else if(act==='lesson'){state.lesson=btn.dataset.id;state.selected=null;state.feedback=null;state.showQuizHints=false;}
     else if(act==='support'){state.support=btn.dataset.value;}
@@ -378,7 +672,16 @@
     }
     else if(act==='piece'){
       let ix=Number(btn.dataset.index);
-      if(state.tab==='explore')state.selected=ix;
+      if(state.tab==='week'){
+        const {task,i:taskIdx}=weekTask(),t=flat(sentences[task.sid]||{groups:[]})[ix];
+        if(task.type==='explore'){state.weekSelected=ix;}
+        else if(task.type==='spot'&&t&&!state.weekFeedback?.correct){
+          const correct=t.text===task.answer;
+          state.weekFeedback={correct,tokenIdx:ix,text:`You tapped ${t.text} (${t.gloss}). Look for the piece that answers the question.`};
+          if(correct)state.weekDone.add(weekKey(state.day,taskIdx));
+        }
+      }
+      else if(state.tab==='explore')state.selected=ix;
       else if(state.tab==='practice'){
         const {q,ix:qIx}=currentQuiz(),t=flat(sentences[q.sid])[ix];
         if(state.feedback&&state.feedback.correct)return;
@@ -393,7 +696,7 @@
       state.feedback=null;state.showQuizHints=false;
     }
     else if(act==='reset'){
-      if(!window.confirm('Clear the saved practice progress for all lessons?'))return;
+      if(!window.confirm('Clear the saved progress for the regular practice lessons? (The seven-day course is kept.)'))return;
       state.completed.clear();state.quizIndex={};state.feedback=null;
     }
     else return;

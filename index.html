@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#172642">
+  <meta name="description" content="A visual, gentle Korean grammar trainer. See the pieces, understand why they are there, and practice spotting them.">
+  <title>조각 · Korean in Pieces</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg:#f7f6f3; --surface:#ffffff; --ink:#172642; --muted:#627087;
+      --line:#e5e8ee; --shadow:0 10px 34px rgba(28,40,65,.055);
+      --subject:#176958; --subject-bg:#ddf5ed;
+      --object:#a64030; --object-bg:#fff0e9;
+      --topic:#315ab9; --topic-bg:#e8eeff;
+      --place:#7443a5; --place-bg:#f1eaff;
+      --focus:#ffcf63; --radius:22px;
+      font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", Arial, sans-serif;
+    }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; background:var(--bg); color:var(--ink); line-height:1.47; }
+    button { font:inherit; cursor:pointer; -webkit-tap-highlight-color:transparent; }
+    button:focus-visible, a:focus-visible { outline:3px solid var(--focus); outline-offset:3px; }
+    button:disabled { cursor:default; opacity:.45; }
+    .shell { max-width:935px; padding:22px 19px 70px; margin:auto; }
+    .hero { background:linear-gradient(120deg,#152641 0%,#263b60 70%,#324c74 100%); color:white; border-radius:28px; padding:26px 29px; overflow:hidden; position:relative; min-height:176px; }
+    .hero::after { content:"ㄱ ㅇ ㅁ"; position:absolute; right:-7px; top:-35px; font-size:116px; letter-spacing:-14px; opacity:.075; font-weight:900; white-space:nowrap; pointer-events:none; }
+    .brand { display:flex; align-items:center; gap:11px; position:relative; z-index:1; }
+    .brand-icon { background:#f3f5ff; color:#243d64; border-radius:12px; padding:9px 11px; font-weight:850; font-size:23px; line-height:1; }
+    .brand-name { font-size:15px; letter-spacing:.055em; font-weight:750; }
+    .brand-sub { opacity:.8; font-size:12px; }
+    .hero h1 { font-size:clamp(25px,4.6vw,36px); line-height:1.14; letter-spacing:-.035em; margin:19px 0 7px; position:relative; z-index:1; }
+    .hero p { margin:0; font-size:14px; opacity:.83; max-width:540px; position:relative; z-index:1; }
+    .tabs { display:flex; gap:7px; margin:18px 0 20px; border-radius:14px; padding:5px; border:1px solid var(--line); background:#fff; width:fit-content; max-width:100%; }
+    .tab { border:0; background:transparent; color:var(--muted); padding:10px 17px; border-radius:10px; font-weight:700; font-size:14px; white-space:nowrap; }
+    .tab.active { background:#e9eef6; color:var(--ink); }
+    .eyebrow { font-size:11px; letter-spacing:.12em; text-transform:uppercase; font-weight:800; color:var(--muted); }
+    h2 { font-size:26px; letter-spacing:-.035em; margin:5px 0 7px; line-height:1.18; }
+    h3 { margin:0 0 7px; font-size:17px; letter-spacing:-.015em; }
+    .muted { color:var(--muted); }
+    p { margin:0 0 12px; }
+    .lessons { display:flex; gap:9px; overflow:auto; padding:2px 1px 11px; scrollbar-width:thin; }
+    .lesson-choice { text-align:left; min-width:175px; background:#fff; border:1px solid var(--line); border-radius:15px; padding:12px 14px; color:var(--ink); line-height:1.3; }
+    .lesson-choice.active { background:#f0f4fc; border-color:#8097cd; box-shadow:0 0 0 1px #8097cd inset; }
+    .lesson-number { font-size:11px; font-weight:800; letter-spacing:.06em; color:var(--muted); display:block; margin-bottom:6px; }
+    .lesson-label { font-size:14px; font-weight:750; }
+    .lesson-count { font-size:11px; display:block; margin-top:7px; color:var(--muted); }
+    .two-col { display:grid; grid-template-columns:minmax(0,1.47fr) minmax(260px,.9fr); gap:16px; align-items:start; }
+    .card { background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:22px; }
+    .aside-card { background:#fcfcfd; }
+    .card-heading { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:14px; }
+    .counter { background:#eff2f7; color:#596980; font-size:12px; padding:5px 9px; border-radius:999px; font-weight:700; white-space:nowrap; }
+    .support-row { display:flex; gap:7px; flex-wrap:wrap; margin:0 0 19px; }
+    .support-btn { border:1px solid #dde2eb; color:#59677a; background:#fff; border-radius:10px; padding:8px 11px; font-size:12px; font-weight:700; }
+    .support-btn.active { background:#223958; border-color:#223958; color:#fff; }
+    .korean-panel { background:linear-gradient(135deg,#f9fafb,#f5f6fa); border:1px solid #edf0f4; border-radius:17px; padding:28px 13px; text-align:center; margin:0 0 12px; }
+    .sentence { display:flex; gap:0; justify-content:center; flex-wrap:wrap; align-items:baseline; font-size:clamp(25px,5.7vw,40px); line-height:1.75; font-weight:680; letter-spacing:-.025em; word-break:keep-all; }
+    .word-group { display:inline-flex; gap:0; align-items:baseline; white-space:nowrap; margin:0 7px; }
+    .k-piece { border:0; border-bottom:3px solid transparent; background:transparent; padding:1px 0 0; border-radius:3px; font-size:inherit; font-weight:inherit; color:var(--ink); letter-spacing:inherit; line-height:inherit; position:relative; }
+    .k-piece:hover { background:rgba(42,64,97,.07); }
+    .k-piece.selected { outline:2px solid #8ea4d4; outline-offset:3px; }
+    .sentence[data-mode="guided"] .k-piece.particle { padding:1px 3px 0; border-radius:7px; margin-left:2px; }
+    .sentence[data-mode="guided"] .subject { color:var(--subject); background:var(--subject-bg); }
+    .sentence[data-mode="guided"] .object { color:var(--object); background:var(--object-bg); }
+    .sentence[data-mode="guided"] .topic { color:var(--topic); background:var(--topic-bg); }
+    .sentence[data-mode="guided"] .place { color:var(--place); background:var(--place-bg); }
+    .sentence[data-mode="colour"] .subject { color:var(--subject); border-bottom-color:var(--subject); }
+    .sentence[data-mode="colour"] .object { color:var(--object); border-bottom-color:var(--object); }
+    .sentence[data-mode="colour"] .topic { color:var(--topic); border-bottom-color:var(--topic); }
+    .sentence[data-mode="colour"] .place { color:var(--place); border-bottom-color:var(--place); }
+    .sentence[data-mode="natural"] .k-piece { color:var(--ink); background:transparent; border-bottom-color:transparent; }
+    .sentence[data-mode="practice"] .k-piece { border:1px solid #dce1e9; padding:0 3px; margin:0 1px; border-radius:6px; }
+    .sentence[data-mode="practice"] .k-piece:hover { border-color:#6a86be; background:#eef2fb; }
+    .sentence[data-mode="practice"] .k-piece.wrong { background:#ffe7df; border-color:#d97964; }
+    .sentence[data-mode="practice"] .k-piece.correct { background:#dbf4e9; border-color:#55a788; }
+    .sentence[data-mode="practice"] .k-piece.hinted.subject { color:var(--subject); background:var(--subject-bg); }
+    .sentence[data-mode="practice"] .k-piece.hinted.object { color:var(--object); background:var(--object-bg); }
+    .sentence[data-mode="practice"] .k-piece.hinted.topic { color:var(--topic); background:var(--topic-bg); }
+    .sentence[data-mode="practice"] .k-piece.hinted.place { color:var(--place); background:var(--place-bg); }
+    .translate { min-height:26px; text-align:center; color:var(--muted); font-size:14px; }
+    .link-btn { border:0; background:transparent; padding:6px 2px; color:#365caa; font-size:13px; font-weight:750; }
+    .hint { font-size:12px; color:var(--muted); }
+    .controls { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:19px; }
+    .btn { background:#223958; color:#fff; border:1px solid #223958; border-radius:12px; padding:11px 16px; font-size:13px; font-weight:750; min-height:42px; }
+    .btn:hover:not(:disabled) { background:#334f78; }
+    .btn.secondary { color:#263d5f; background:#fff; border-color:#dae0e9; }
+    .btn.secondary:hover:not(:disabled) { background:#f5f7fb; }
+    .btn.small { padding:8px 11px; min-height:36px; }
+    .detail-word { font-size:34px; font-weight:750; margin:5px 0 1px; }
+    .detail-gloss { font-weight:750; margin-bottom:11px; }
+    .role-badge { border-radius:100px; padding:5px 9px; font-size:11px; font-weight:800; display:inline-block; }
+    .role-badge.subject { color:var(--subject); background:var(--subject-bg); }
+    .role-badge.object { color:var(--object); background:var(--object-bg); }
+    .role-badge.topic { color:var(--topic); background:var(--topic-bg); }
+    .role-badge.place { color:var(--place); background:var(--place-bg); }
+    .role-badge.plain { color:#536176; background:#eef1f6; }
+    .detail-why { font-size:14px; margin:15px 0 0; line-height:1.6; }
+    .little-rule { background:#f1f4f9; border-radius:12px; padding:12px 13px; color:#475a76; font-size:12px; margin-top:13px; }
+    .legend { display:flex; flex-wrap:wrap; gap:10px 15px; margin-top:17px; }
+    .legend-item { display:flex; gap:6px; font-size:12px; color:#5b6575; align-items:center; }
+    .dot { width:9px; height:9px; border-radius:50%; display:inline-block; flex:0 0 auto; }
+    .dot.subject { background:var(--subject); } .dot.object { background:var(--object); }
+    .dot.topic { background:var(--topic); } .dot.place { background:var(--place); }
+    .note { margin:14px 0 16px; color:#51617a; font-size:13px; }
+    .lesson-intro { margin:0 0 18px; max-width:680px; }
+    .lesson-intro strong { color:#293d5b; }
+    .practice-card { max-width:735px; }
+    .quiz-question { margin:8px 0 18px; font-size:20px; font-weight:750; letter-spacing:-.02em; }
+    .quiz-feedback { border:1px solid #e2e7ee; background:#f3f6fa; border-radius:13px; padding:14px 15px; margin:15px 0 0; font-size:14px; min-height:70px; }
+    .quiz-feedback.good { background:#ecf8f2; border-color:#c6e6d8; }
+    .quiz-feedback.try { background:#fff5ec; border-color:#f4d7bf; }
+    .quiz-actions { display:flex; flex-wrap:wrap; gap:9px; align-items:center; justify-content:space-between; margin-top:16px; }
+    .progress { width:100%; height:8px; border-radius:20px; background:#e9edf3; overflow:hidden; margin:13px 0 10px; }
+    .progress > span { display:block; height:100%; background:#5e9e8f; border-radius:20px; transition:width .25s; }
+    .reference-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; }
+    .reference-grid .card { padding:19px; }
+    .sample { border-radius:13px; padding:14px 10px; margin:13px 0; text-align:center; background:#f6f7fa; font-size:23px; font-weight:740; }
+    .sample .subject { color:var(--subject); } .sample .object { color:var(--object); } .sample .topic { color:var(--topic); }
+    .reference-foot { margin:17px 0 0; max-width:730px; }
+    .tablebox { overflow-x:auto; margin:14px 0; }
+    table { width:100%; border-collapse:collapse; font-size:13px; }
+    th,td { text-align:left; border-bottom:1px solid var(--line); padding:10px 8px; }
+    th { color:#58677c; font-size:12px; }
+    footer { margin-top:23px; text-align:center; color:#77849a; font-size:12px; }
+    @media(max-width:740px) {
+      .shell { padding:12px 12px 55px; }
+      .hero { padding:20px; border-radius:21px; min-height:161px; }
+      .hero h1 { margin-top:17px; }
+      .tabs { width:100%; justify-content:space-between; }
+      .tab { flex:1; padding:10px 7px; }
+      .two-col { grid-template-columns:1fr; }
+      .reference-grid { grid-template-columns:1fr; gap:10px; }
+      .card { padding:18px; }
+      .lesson-choice { min-width:151px; }
+      .sentence { font-size:clamp(25px,7.8vw,35px); }
+      .word-group { margin:0 5px; }
+      .korean-panel { padding:25px 9px; }
+    }
+    @media (prefers-reduced-motion:reduce) { html {scroll-behavior:auto;} .progress > span {transition:none;} }
+  </style>
+</head>
+<body>
+<div class="shell">
+  <header class="hero">
+    <div class="brand"><span class="brand-icon" aria-hidden="true">조</span><div><div class="brand-name">조각 · JOGAK</div><div class="brand-sub">Korean in pieces</div></div></div>
+    <h1>See how Korean fits together.</h1>
+    <p>No streaks. No guessing. Just clear colours, tiny explanations, and practice at your own pace.</p>
+  </header>
+  <nav class="tabs" aria-label="App sections" id="tabs"></nav>
+  <main id="app" aria-live="off"></main>
+  <footer>Made for curious learners who need the <em>why</em> — not just the answer. · Progress stays in this browser.</footer>
+</div>
+<script>
+(() => {
+  'use strict';
+  const N=(text,gloss,why='This is the word itself. Look for it again when a little grammar piece is attached.')=>({text,kind:'noun',gloss,why});
+  const V=(text,gloss,why='This tells us what is happening. Korean normally puts this part at the end of the sentence.')=>({text,kind:'verb',gloss,why});
+  const P=(text,kind,host,why)=>({text,kind,host,gloss:({subject:'Marks the subject',object:'Marks the object',topic:'Marks the topic',place:'Marks a place'})[kind],why});
+  const sentences={
+    catWater:{ translation:'The cat drinks water.',groups:[
+      [N('고양이','cat'),P('가','subject','고양이','Here, the cat is the one doing the drinking.')],
+      [N('물','water'),P('을','object','물','Water is the thing the cat drinks.')],
+      [V('마셔요','drinks')]
+    ]},
+    friendBook:{ translation:'The friend reads a book.',groups:[
+      [N('친구','friend'),P('가','subject','친구','The friend is the one doing the reading.')],
+      [N('책','book'),P('을','object','책','The book is what the friend reads.')],
+      [V('읽어요','reads')]
+    ]},
+    dogBall:{ translation:'The dog sees a ball.',groups:[
+      [N('강아지','dog'),P('가','subject','강아지','The dog is the one seeing something.')],
+      [N('공','ball'),P('을','object','공','The ball is what the dog sees.')],
+      [V('봐요','sees')]
+    ]},
+    catMilk:{ translation:'As for the cat, it drinks milk.',groups:[
+      [N('고양이','cat'),P('는','topic','고양이','We are making the cat our topic: “As for the cat ...” It also happens to be the drinker.')],
+      [N('우유','milk'),P('를','object','우유','Milk is the thing being drunk.')],
+      [V('마셔요','drinks')]
+    ]},
+    meCoffee:{ translation:'As for me, I drink coffee.',groups:[
+      [N('저','I / me (polite)'),P('는','topic','저','We are talking about me: “As for me ...”')],
+      [N('커피','coffee'),P('를','object','커피','Coffee is the thing being drunk.')],
+      [V('마셔요','drink')]
+    ]},
+    waterTopic:{ translation:'As for the water, the cat drinks it.',groups:[
+      [N('물','water'),P('은','topic','물','Water is what we are talking about. It is still what gets drunk, even though it is marked as the topic.')],
+      [N('고양이','cat'),P('가','subject','고양이','The cat is the subject: the one doing the drinking.')],
+      [V('마셔요','drinks')]
+    ]},
+    school:{ translation:'As for me, I go to school.',groups:[
+      [N('저','I / me (polite)'),P('는','topic','저','We are talking about me.')],
+      [N('학교','school'),P('에','place','학교','에 shows the destination here: school is where I am going.')],
+      [V('가요','go')]
+    ]},
+    catHome:{ translation:'The cat sleeps at home.',groups:[
+      [N('고양이','cat'),P('가','subject','고양이','The cat is the one sleeping.')],
+      [N('집','home'),P('에서','place','집','에서 shows where the sleeping happens: at home.')],
+      [V('자요','sleeps')]
+    ]},
+    friendAtHome:{ translation:'The friend reads a book at home.',groups:[
+      [N('친구','friend'),P('가','subject','친구','The friend is the one reading.')],
+      [N('집','home'),P('에서','place','집','This shows where the reading happens.')],
+      [N('책','book'),P('을','object','책','The book is the thing being read.')],
+      [V('읽어요','reads')]
+    ]},
+    eatRice:{ translation:'As for me, I eat rice/a meal.',groups:[
+      [N('저','I / me (polite)'),P('는','topic','저','We are talking about what I do.')],
+      [N('밥','rice / meal'),P('을','object','밥','Rice or a meal is what gets eaten.')],
+      [V('먹어요','eat')]
+    ]},
+    friendApple:{ translation:'The friend eats an apple.',groups:[
+      [N('친구','friend'),P('가','subject','친구','The friend is the one eating.')],
+      [N('사과','apple'),P('를','object','사과','The apple is the thing being eaten.')],
+      [V('먹어요','eats')]
+    ]},
+    dogTopic:{ translation:'As for the dog, it sleeps at home.',groups:[
+      [N('강아지','dog'),P('는','topic','강아지','We are making the dog the thing we are talking about.')],
+      [N('집','home'),P('에서','place','집','Home is where the sleeping happens.')],
+      [V('자요','sleeps')]
+    ]}
+  };
+  const lessons=[
+    {id:'roles',title:'Who does what?',sub:'Start with the doer and the thing an action is aimed at.',why:'Forget grammar names for a second: who does something, and what do they do it to? Korean uses a small piece after a word to signal each job.',sentences:['catWater','friendBook','dogBall']},
+    {id:'topic',title:'What are we talking about?',sub:'Learn why a topic and a doer are not always the same.',why:'A topic sets up the conversation: “As for the cat ...”. The subject tells us who or what the sentence is describing. Sometimes they are the same, but not always.',sentences:['catMilk','meCoffee','waterTopic']},
+    {id:'places',title:'Where does it happen?',sub:'Understand 에 and 에서 through everyday actions.',why:'에 can mark a destination, as in going to school. 에서 marks the place where an action happens, as in reading at home.',sentences:['school','catHome','friendAtHome']},
+    {id:'mixed',title:'Put the pieces together',sub:'Recognise the same little pieces in new sentences.',why:'The same patterns appear again and again. You are not learning a brand-new rule every time the noun changes.',sentences:['eatRice','friendApple','dogTopic']}
+  ];
+  const questions={
+    roles:[
+      {sid:'catWater',prompt:'Tap the word that means “water”.',answer:'물',why:'물 means water. Even with 을 attached, 물 stays the same.'},
+      {sid:'catWater',prompt:'Tap the little piece that tells us what is being drunk.',answer:'을',why:'을 marks water as the object: the thing being drunk.'},
+      {sid:'catWater',prompt:'Tap the little piece that marks the cat as the doer.',answer:'가',why:'가 marks the subject. In this sentence the cat is doing the drinking.'},
+      {sid:'friendBook',prompt:'Tap the word that means “book”.',answer:'책',why:'책 means book. 을 is attached because the book is what gets read.'},
+      {sid:'dogBall',prompt:'Tap the little piece that marks what the dog sees.',answer:'을',why:'을 comes after 공, meaning ball. The ball is what gets seen.'}
+    ],
+    topic:[
+      {sid:'catMilk',prompt:'Tap the little piece meaning “as for the cat ...”.',answer:'는',why:'는 makes the cat the topic of the sentence.'},
+      {sid:'meCoffee',prompt:'Tap the word that means “coffee”.',answer:'커피',why:'커피 is coffee, and 를 is attached to show it is the thing being drunk.'},
+      {sid:'meCoffee',prompt:'Tap the object marker attached to coffee.',answer:'를',why:'를 marks coffee as the thing the action is directed at.'},
+      {sid:'waterTopic',prompt:'Tap the piece that marks “water” as the topic.',answer:'은',why:'은 introduces water as what we are talking about.'},
+      {sid:'waterTopic',prompt:'Tap the piece that marks the cat as the doer.',answer:'가',why:'가 is on 고양이 (cat). The cat is the one drinking.'}
+    ],
+    places:[
+      {sid:'school',prompt:'Tap the piece meaning “to” in “go to school”.',answer:'에',why:'에 shows the destination of the going.'},
+      {sid:'school',prompt:'Tap the word meaning “school”.',answer:'학교',why:'학교 means school. 에 attaches to show that school is the destination.'},
+      {sid:'catHome',prompt:'Tap the piece marking where the sleeping happens.',answer:'에서',why:'에서 marks home as the location of the action.'},
+      {sid:'catHome',prompt:'Tap the word meaning “home”.',answer:'집',why:'집 means home. 에서 is attached to show that an action happens there.'},
+      {sid:'friendAtHome',prompt:'Tap the piece marking the book as the object.',answer:'을',why:'을 attaches to 책 because the book is what gets read.'}
+    ],
+    mixed:[
+      {sid:'eatRice',prompt:'Tap the word meaning “rice / meal”.',answer:'밥',why:'밥 means rice or a meal. 을 is the separate object marker.'},
+      {sid:'eatRice',prompt:'Tap the piece meaning “as for me ...”.',answer:'는',why:'는 marks 저 (I / me) as the topic.'},
+      {sid:'friendApple',prompt:'Tap the object marker attached to “apple”.',answer:'를',why:'를 attaches after 사과 to mark it as the thing eaten.'},
+      {sid:'friendApple',prompt:'Tap the piece that marks the friend as the doer.',answer:'가',why:'가 marks 친구 as the subject.'},
+      {sid:'dogTopic',prompt:'Tap the piece introducing the dog as the topic.',answer:'는',why:'는 marks 강아지 as the topic — what we are talking about.'}
+    ]
+  };
+  const saved=(()=>{try {return JSON.parse(localStorage.getItem('jogak-v1'))||{}}catch(e){return {}}})();
+  const state={
+    tab:['explore','practice','guide'].includes(saved.tab)?saved.tab:'explore',
+    lesson:lessons.some(l=>l.id===saved.lesson)?saved.lesson:'roles',
+    sentenceIndex:saved.sentenceIndex||{},quizIndex:saved.quizIndex||{},
+    support:['guided','colour','natural'].includes(saved.support)?saved.support:'guided',
+    showTranslation:saved.showTranslation!==false,
+    completed:new Set(Array.isArray(saved.completed)?saved.completed:[]),
+    selected:null, feedback:null, showQuizHints:false
+  };
+  const $app=document.getElementById('app'), $tabs=document.getElementById('tabs');
+  function persist(){try{localStorage.setItem('jogak-v1',JSON.stringify({tab:state.tab,lesson:state.lesson,sentenceIndex:state.sentenceIndex,quizIndex:state.quizIndex,support:state.support,showTranslation:state.showTranslation,completed:[...state.completed]}));}catch(e){}}
+  function esc(v){return String(v).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+  const flat=sentence=>sentence.groups.flat();
+  const currentLesson=()=>lessons.find(l=>l.id===state.lesson);
+  const currentSentenceId=()=>{let l=currentLesson(); return l.sentences[(state.sentenceIndex[l.id]||0)%l.sentences.length]};
+  const currentQuiz=()=>{const bank=questions[state.lesson];const ix=(state.quizIndex[state.lesson]||0)%bank.length;return {q:bank[ix],ix,bank}};
+  const qKey=(lesson,index)=>lesson+':'+index;
+  function roleName(kind){return {noun:'Word',verb:'Action / description',subject:'Subject · who / what',object:'Object · what receives the action',topic:'Topic · what we are talking about',place:'Place / direction'}[kind]||kind;}
+  function rule(t){const rules={
+    '가':'After a noun ending in a vowel, use 가. After a consonant, use 이.',
+    '이':'After a noun ending in a consonant, use 이. After a vowel, use 가.',
+    '을':'After a noun ending in a consonant, use 을. After a vowel, use 를.',
+    '를':'After a noun ending in a vowel, use 를. After a consonant, use 을.',
+    '은':'After a noun ending in a consonant, use 은. After a vowel, use 는.',
+    '는':'After a noun ending in a vowel, use 는. After a consonant, use 은.',
+    '에':'Think “destination” here: where someone is going.',
+    '에서':'Think “location of an action” here: where something happens.'
+  };return rules[t.text]||'';}
+  function roleClass(t){return ['subject','object','topic','place'].includes(t.kind)?t.kind:'';}
+  function makeSentence(sentence,mode,opts={}){
+    let ix=-1;
+    return `<div class="sentence" data-mode="${esc(mode)}" lang="ko" aria-label="${esc(sentence.groups.map(g=>g.map(t=>t.text).join('')).join(' '))}">${sentence.groups.map(g=>`<span class="word-group">${g.map(t=>{
+      ix++;
+      let selected=opts.selected===ix?' selected':'';
+      let extra=opts.feedback&&opts.feedback.tokenIdx===ix?(opts.feedback.correct?' correct':' wrong'):'';
+      let hinted=opts.hinted?' hinted':'';
+      return `<button type="button" class="k-piece ${roleClass(t)} ${t.kind==='noun'||t.kind==='verb'?'':'particle'}${selected}${extra}${hinted}" data-action="piece" data-index="${ix}" aria-label="${esc(t.text)}" title="Tap to ${mode==='practice'?'choose':'explain'} ${esc(t.text)}">${esc(t.text)}</button>`;
+    }).join('')}</span>`).join('')}</div>`;
+  }
+  function lessonPicker(){return `<div class="eyebrow" style="margin-bottom:9px">Pick a tiny lesson</div><div class="lessons">${lessons.map((l,i)=>{
+    const done=questions[l.id].filter((q,j)=>state.completed.has(qKey(l.id,j))).length;
+    return `<button class="lesson-choice ${state.lesson===l.id?'active':''}" data-action="lesson" data-id="${l.id}" aria-pressed="${state.lesson===l.id}"><span class="lesson-number">LESSON ${i+1}</span><span class="lesson-label">${esc(l.title)}</span><span class="lesson-count">${done} / ${questions[l.id].length} practice questions understood</span></button>`;
+  }).join('')}</div>`;}
+  function renderExplore(){
+    const l=currentLesson(),si=(state.sentenceIndex[l.id]||0)%l.sentences.length,s=sentences[currentSentenceId()];
+    const tokens=flat(s);let ix=Number.isInteger(state.selected)?state.selected:tokens.findIndex(t=>t.kind==='object');
+    if(ix<0||ix>=tokens.length)ix=0;
+    state.selected=ix;let t=tokens[ix],isParticle=['subject','object','topic','place'].includes(t.kind);
+    const mode=state.support;
+    return `${lessonPicker()}<div class="lesson-intro"><h2>${esc(l.title)}</h2><p class="muted">${esc(l.sub)}</p><p class="note"><strong>Why this matters:</strong> ${esc(l.why)}</p></div>
+    <div class="two-col"><section class="card" aria-label="Explore a Korean sentence">
+      <div class="card-heading"><div class="eyebrow">Explore the pieces</div><span class="counter">Sentence ${si+1} of ${l.sentences.length}</span></div>
+      <div class="eyebrow" style="margin-bottom:8px">How much help?</div>
+      <div class="support-row" role="group" aria-label="Learning support level">
+        ${[['guided','1 · Guide me'],['colour','2 · Colours'],['natural','3 · Natural']].map(([k,v])=>`<button class="support-btn ${mode===k?'active':''}" data-action="support" data-value="${k}" aria-pressed="${mode===k}">${v}</button>`).join('')}
+      </div>
+      <div class="korean-panel">${makeSentence(s,mode,{selected:ix})}</div>
+      <div class="translate">${state.showTranslation?esc(s.translation):'Meaning hidden — try reading it first.'}</div>
+      <div style="text-align:center"><button class="link-btn" data-action="meaning">${state.showTranslation?'Hide English meaning':'Show English meaning'}</button></div>
+      <p class="hint">Tap any Korean piece, even a little ending, to understand its job.</p>
+      <div class="controls"><button class="btn secondary" data-action="sentence-prev" ${si===0?'disabled':''}>← Previous</button><button class="btn" data-action="sentence-next">${si===l.sentences.length-1?'Again ↺':'Next sentence →'}</button></div>
+      <div class="legend" aria-label="Colour key"><span class="legend-item"><span class="dot subject"></span>Who / what</span><span class="legend-item"><span class="dot object"></span>Object</span><span class="legend-item"><span class="dot topic"></span>Topic</span><span class="legend-item"><span class="dot place"></span>Place</span></div>
+    </section>
+    <aside class="card aside-card" aria-label="Explanation of selected piece"><div class="eyebrow">Look inside</div><div class="detail-word" lang="ko">${esc(t.text)}</div><div class="detail-gloss">${esc(t.gloss)}</div>
+    <span class="role-badge ${isParticle?roleClass(t):'plain'}">${esc(roleName(t.kind))}</span>
+    <p class="detail-why">${esc(t.why)}</p>
+    ${isParticle?`<div class="little-rule"><strong>Why this ending?</strong><br>${esc(rule(t))}</div>`:''}
+    <button class="btn" style="margin-top:22px;width:100%" data-action="nav" data-tab="practice">Try spotting the pieces →</button>
+    </aside></div>`;
+  }
+  function renderPractice(){
+    const l=currentLesson(),{q,ix,bank}=currentQuiz(),s=sentences[q.sid],count=bank.filter((_,i)=>state.completed.has(qKey(l.id,i))).length;
+    const feedback=state.feedback;
+    const pct=Math.round(count/bank.length*100);
+    const practiceSentence=makeSentence(s,'practice',{feedback,hinted:state.showQuizHints});
+    return `${lessonPicker()}<section class="card practice-card"><div class="card-heading"><span class="eyebrow">Gentle practice</span><span class="counter">Question ${ix+1} of ${bank.length}</span></div>
+      <h2>Spot a little piece</h2><p class="muted">No penalties. If you need colours, use a hint. Try the same question again as often as you like.</p>
+      <div class="progress" role="progressbar" aria-label="Questions understood" aria-valuenow="${count}" aria-valuemin="0" aria-valuemax="${bank.length}"><span style="width:${pct}%"></span></div>
+      <p class="hint">${count} of ${bank.length} questions understood in this lesson</p>
+      <div class="quiz-question">${esc(q.prompt)}</div>
+      <div class="korean-panel">${practiceSentence}</div>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap"><button class="link-btn" data-action="quiz-hint">${state.showQuizHints?'Hide colours':'I need a colour hint'}</button><button class="link-btn" data-action="quiz-meaning">${state.showTranslation?'Hide meaning':'Show meaning'}</button></div>
+      <div class="translate">${state.showTranslation?esc(s.translation):''}</div>
+      ${feedback?`<div class="quiz-feedback ${feedback.correct?'good':'try'}" role="status"><strong>${feedback.correct?'Yes — you spotted it!':'Good try. Look again.'}</strong><div style="margin-top:4px">${esc(feedback.correct?q.why:feedback.hint)}</div></div>`:`<div class="quiz-feedback">Tap the Korean piece you think answers the question. The thin borders show where the pieces separate.</div>`}
+      <div class="quiz-actions"><button class="btn secondary" data-action="quiz-skip">Skip this one →</button><button class="btn" data-action="quiz-next" ${!feedback||!feedback.correct?'disabled':''}>Next question →</button></div>
+    </section>`;
+  }
+  function referenceCard(kind,title,question,example,explanation){return `<section class="card"><span class="role-badge ${kind}">${esc(kind==='object'?'What receives it':kind==='subject'?'Who / what':'What it is about')}</span><h3 style="margin-top:12px">${esc(title)}</h3><p class="muted" style="font-size:13px">${esc(question)}</p><div class="sample" lang="ko">${example}</div><p style="font-size:13px">${esc(explanation)}</p></section>`;}
+  function renderGuide(){return `<div class="eyebrow">The plain-English guide</div><h2 style="margin-bottom:10px">Three different jobs</h2><p class="muted" style="max-width:745px">Think about a cat drinking water. You do not have to memorise grammar words first. Start with what each little piece is trying to tell you.</p>
+  <div class="reference-grid">
+  ${referenceCard('subject','The subject','Who or what is doing it (in this example)?','고양이<span class="subject">가</span>','가 tells us the cat is the subject. In this sentence, it is the drinker.')}
+  ${referenceCard('object','The object','What does the cat drink?','물<span class="object">을</span>','을 marks water as the thing the drinking is directed at.')}
+  ${referenceCard('topic','The topic','What are we talking about?','고양이<span class="topic">는</span>','는 means we are talking about the cat: “As for the cat ...”')}
+  </div>
+  <section class="card reference-foot" style="margin-top:16px"><h3>Why are there two versions of each marker?</h3><p class="muted" style="font-size:13px">Korean chooses a different form depending on whether the word immediately before the particle ends with a vowel sound or a consonant sound.</p>
+  <div class="tablebox"><table><thead><tr><th>Job</th><th>After a vowel</th><th>After a consonant</th></tr></thead><tbody>
+  <tr><td>Subject</td><td lang="ko">고양이<b style="color:var(--subject)">가</b></td><td lang="ko">물<b style="color:var(--subject)">이</b></td></tr>
+  <tr><td>Object</td><td lang="ko">커피<b style="color:var(--object)">를</b></td><td lang="ko">물<b style="color:var(--object)">을</b></td></tr>
+  <tr><td>Topic</td><td lang="ko">고양이<b style="color:var(--topic)">는</b></td><td lang="ko">물<b style="color:var(--topic)">은</b></td></tr>
+  </tbody></table></div>
+  <p class="muted" style="font-size:13px">One important twist: a topic and a subject can refer to the same person or thing, but they describe different jobs. A topic can even be something other than the subject. We'll practise that gently in lesson 2.</p></section>
+  <div class="card reference-foot" style="margin-top:15px"><h3>Your learning pace is yours</h3><p class="muted" style="font-size:13px">The app saves which practice questions you've understood in this browser. It has no streaks, no timer, and no account.</p><button class="btn secondary small" data-action="reset">Reset practice progress</button></div>`;}
+  function render(){
+    $tabs.innerHTML=[['explore','◈ Explore'],['practice','✓ Practise'],['guide','? The why']].map(([k,t])=>`<button class="tab ${state.tab===k?'active':''}" data-action="nav" data-tab="${k}" aria-current="${state.tab===k?'page':'false'}">${t}</button>`).join('');
+    $app.innerHTML=state.tab==='explore'?renderExplore():state.tab==='practice'?renderPractice():renderGuide();
+    persist();
+  }
+  document.addEventListener('click',ev=>{
+    const btn=ev.target.closest('button[data-action]');if(!btn)return;
+    const act=btn.dataset.action;
+    if(act==='nav'){state.tab=btn.dataset.tab;state.feedback=null;state.showQuizHints=false;}
+    else if(act==='lesson'){state.lesson=btn.dataset.id;state.selected=null;state.feedback=null;state.showQuizHints=false;}
+    else if(act==='support'){state.support=btn.dataset.value;}
+    else if(act==='meaning'||act==='quiz-meaning'){state.showTranslation=!state.showTranslation;}
+    else if(act==='sentence-next'||act==='sentence-prev'){
+      const l=currentLesson(),n=l.sentences.length;
+      state.sentenceIndex[l.id]=((state.sentenceIndex[l.id]||0)+(act==='sentence-next'?1:-1)+n)%n;state.selected=null;
+    }
+    else if(act==='piece'){
+      let ix=Number(btn.dataset.index);
+      if(state.tab==='explore')state.selected=ix;
+      else if(state.tab==='practice'){
+        const {q,ix:qIx}=currentQuiz(),t=flat(sentences[q.sid])[ix];
+        if(state.feedback&&state.feedback.correct)return;
+        const correct=t.text===q.answer;
+        state.feedback={correct,tokenIdx:ix,hint:correct?'':`You tapped ${t.text}, which means “${t.gloss}”. Try the question once more. You can show the colours if that helps.`};
+        if(correct)state.completed.add(qKey(state.lesson,qIx));
+      }
+    }
+    else if(act==='quiz-hint')state.showQuizHints=!state.showQuizHints;
+    else if(act==='quiz-next'||act==='quiz-skip'){
+      const bank=questions[state.lesson];state.quizIndex[state.lesson]=((state.quizIndex[state.lesson]||0)+1)%bank.length;
+      state.feedback=null;state.showQuizHints=false;
+    }
+    else if(act==='reset'){
+      if(!window.confirm('Clear the saved practice progress for all lessons?'))return;
+      state.completed.clear();state.quizIndex={};state.feedback=null;
+    }
+    else return;
+    render();
+  });
+  render();
+})();
+</script>
+</body>
+</html>
